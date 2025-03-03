@@ -5,7 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+
+import com.android.march3.utils.blankToast
+import com.android.march3.utils.createAccountToast
+import com.android.march3.utils.find
+import com.android.march3.utils.isNotValid
+import com.android.march3.utils.onClick
+import com.android.march3.utils.successfulLoginToast
 
 class LoginActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,8 +19,8 @@ class LoginActivity : Activity() {
         setContentView(R.layout.activity_login)
 
         var fullname = ""
-        val username: EditText = findViewById(R.id.username)
-        val password: EditText = findViewById(R.id.password)
+        val username: EditText = find(R.id.username)
+        val password: EditText = find(R.id.password)
 
         intent?.let{
             it.getStringExtra("fullname")?.let { f ->
@@ -31,16 +37,16 @@ class LoginActivity : Activity() {
         }
 
         val loginButton: Button = findViewById(R.id.loginbutton)
-        loginButton.setOnClickListener {
-            if(username.text.toString().isNullOrEmpty() ||
-                password.text.toString().isNullOrEmpty()){
-                Toast.makeText(this, "Dont leave fields blank!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+        loginButton.onClick {
+            if(username.isNotValid() ||
+                password.isNotValid()){
+                blankToast()
+                return@onClick
             }
 
             if(fullname.isNullOrEmpty()){
-                Toast.makeText(this, "Please Create Account!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                createAccountToast()
+                return@onClick
             }
 
             val intent = Intent(this, LandingActivity::class.java).apply {
@@ -49,6 +55,7 @@ class LoginActivity : Activity() {
                 putExtra("password", password.text.toString())
             }
             startActivity(intent)
+            successfulLoginToast()
         }
 
         val registerButton: Button = findViewById(R.id.registerbutton)
