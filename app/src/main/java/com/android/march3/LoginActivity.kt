@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import com.android.march3.customapp.CustomApplication
 
 import com.android.march3.utils.blankToast
 import com.android.march3.utils.createAccountToast
@@ -49,11 +50,11 @@ class LoginActivity : Activity() {
                 return@onClick
             }
 
-            val intent = Intent(this, LandingActivity::class.java).apply {
-                putExtra("fullname", fullname)
-                putExtra("username", username.text.toString())
-                putExtra("password", password.text.toString())
-            }
+            (application as CustomApplication).fullname = fullname
+            (application as CustomApplication).username = username.text.toString()
+            (application as CustomApplication).password = password.text.toString()
+
+            val intent = Intent(this, LandingActivity::class.java)
             startActivity(intent)
             successfulLoginToast()
         }
